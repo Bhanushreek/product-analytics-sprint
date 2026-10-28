@@ -2,7 +2,7 @@
 
 A SQL analysis of a public e-commerce dataset in Google BigQuery to find where shoppers drop off and whether buyers come back.
 
-> Self-directed practice project using a public synthetic dataset. This is not work done for an employer, and the results do not describe a real company. Status: In progress.
+> Self-directed practice project using a public synthetic dataset. This is not work done for an employer, and the results do not describe a real company. Status: Done.
 
 ## Questions
 
