@@ -42,6 +42,10 @@ A SQL analysis of a public e-commerce dataset in Google BigQuery to find where s
 - [Average retention by month](images/retention-line-chart.png)
 - [Repeat rate by source](images/repeat-rate-by-source.png)
 
+## Working spreadsheet
+
+[View the Google Sheets analysis](https://docs.google.com/spreadsheets/d/1Js0A3oNSFp2YjtL2V1q3D3d79DVpnbusiG95FdLchxM/edit?usp=sharing)
+
 ## How to run
 
 1. Open the [BigQuery sandbox](https://console.cloud.google.com/bigquery).
