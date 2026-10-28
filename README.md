@@ -1,90 +1,60 @@
-# Product Analytics Sprint
+# Project 2: E-commerce Funnel and Retention Analysis
 
-SQL funnel and retention analysis on e-commerce data (BigQuery) and an A/B test analysis in Python. Self-directed learning projects by K. Bhanushree, final-year B.Tech (CSE, AI and ML).
+A SQL analysis of a public e-commerce dataset in Google BigQuery to find where shoppers drop off and whether buyers come back.
 
-> These are practice projects on public datasets, not work done for an employer. Every number below comes from my own queries and notebooks in this repository.
+> Self-directed practice project using a public synthetic dataset. This is not work done for an employer, and the results do not describe a real company. Status: In progress.
 
-## Projects
+## Questions
 
-| # | Project | Question | Tools | Status |
-| --- | --- | --- | --- | --- |
-| 1 | Funnel and retention analysis | Where do shoppers drop off, and do buyers come back? | BigQuery SQL, Looker Studio | [In progress / Done] |
-| 2 | A/B test analysis | Does moving a gate in a mobile game change player retention? | Python (pandas, scipy) | [In progress / Done] |
+1. What share of sessions that view a product go on to add it to a cart and buy it?
+2. How does conversion differ by traffic source and browser?
+3. Of the customers who buy in a given month, how many buy again in following months?
 
-## Project 1: Funnel and Retention Analysis
+## Data
 
-**Dataset:** `bigquery-public-data.thelook_ecommerce` (public e-commerce dataset in Google BigQuery).
+`bigquery-public-data.thelook_ecommerce` (tables: `events`, `orders`, `order_items`, `users`). Queried on 27 October 2026. The public dataset can change, so results may differ if rerun.
 
-**Questions**
-1. What share of visitors who view a product go on to add it to a cart and buy it?
-2. How does conversion differ by traffic source?
-3. Of the customers who buy in a given month, how many buy again in the following months?
+## Method
 
-**Method**
-- Defined the funnel from the events table: [steps, for example product view → cart → purchase]
-- Built monthly cohorts by [first purchase month]
-- All queries are in [`sql/`](sql/), each with a comment explaining the question it answers
+- **Funnel:** Per session, flag a product view, cart event, and purchase event, then count sessions that reached each step. This checks that each event occurred, not their order.
+- **Segments:** Compare the same funnel by traffic source and browser; also review monthly conversion and cart abandonment by source.
+- **Retention:** Group buyers by the month of their first non-cancelled order, then measure activity 1 to 6 months later. Only cohorts old enough to have 6 full months are included.
+- **Repeat purchase:** Calculate the share of buyers with two or more non-cancelled orders, by traffic source, and the median days to a second order.
+- Queries are in [`sql/question_bank.sql`](sql/question_bank.sql). Each query has a comment stating its question and finding.
 
-**Key findings** *(replace with your real results)*
-- The largest drop-off is at [step], where [X]% of users leave
-- [Traffic source] converts at [X]% versus [Y]% for [other source]
-- [X]% of buyers purchase again within [N] months
+## Key findings
 
-**Recommendations** *(replace with your own)*
-1. [Change], because [evidence from the data]
-2. [Change], because [evidence from the data]
+- Of **680,424** product-view sessions, **63.3%** also had a cart event and **26.5%** reached purchase. The largest drop was from cart to purchase: **58.1%** of cart sessions did not reach purchase.
+- **Facebook and Organic** had the highest overall conversion at **26.6%**; **YouTube** was lowest at **26.4%**, a **0.2 percentage-point** gap.
+- Average cohort retention was about **1.5%** in months 1, 3, and 6. Overall repeat purchase was **33.6%**; the median time to a second order was **257 days**.
 
-**Dashboard:** [link to the public Looker Studio report]
+## Recommendations
 
-## Project 2: A/B Test Analysis
+1. Test a simpler cart-to-checkout path and measure cart-to-purchase conversion. Evidence: **58.1%** of cart sessions did not reach purchase. Effort: medium.
+2. Review the YouTube landing and checkout journey and measure its conversion and cart abandonment. Evidence: YouTube had the lowest conversion (**26.4%**) and highest abandonment (**58.3%**), though differences by source were small. Effort: low.
+3. Investigate why buyers do not return and test a relevant reorder reminder. Measure repeat purchase and cohort retention. Evidence: repeat purchase was **33.6%**, while average cohort retention was about **1.5%** at months 1, 3, and 6. Effort: medium.
 
-**Dataset:** Cookie Cats mobile game A/B test (Kaggle). I link to it instead of storing it here: [Kaggle dataset link].
+## Charts
 
-**Question:** players were shown the first gate at level 30 or level 40. Does the gate position affect day-1 and day-7 retention?
+- [Funnel](images/funnel.png)
+- [Conversion by traffic source](images/conversion-by-source.png)
+- [Retention heatmap](images/retention-heatmap.png)
+- [Repeat rate by source](images/repeat-rate-by-source.png)
 
-**Method**
-- Compared retention between groups with [a two-proportion test and a bootstrap confidence interval]
-- Checked [a guardrail metric, such as total game rounds played]
-- Notebook: [`python/ab_test_analysis.ipynb`](python/ab_test_analysis.ipynb)
+## How to run
 
-**Result** *(replace with your real results)*
-- Day-7 retention: [X]% (gate 30) vs [Y]% (gate 40); difference [Z] points, 95% CI [a, b]
-- **Recommendation:** [ship / don't ship / run longer], because [reason]
-- **Caveats:** [for example, observational window, novelty effects, possible data issues]
-
-## Repository Structure
-
-```
-product-analytics-sprint/
-├── README.md
-├── requirements.txt
-├── sql/                  # BigQuery queries, one file per analysis step
-├── python/               # notebooks and scripts
-├── writeups/             # one-page summaries of each project
-└── images/               # screenshots and charts used in this README
-```
-
-## How to Run
-
-**SQL (BigQuery)**
-1. Open the [BigQuery sandbox](https://console.cloud.google.com/bigquery) with a Google account (no billing details needed).
-2. Query the public dataset `bigquery-public-data.thelook_ecommerce`.
-3. Run the files in `sql/` in numerical order.
-
-**Python**
-1. `pip install -r requirements.txt`
-2. Download the Cookie Cats dataset from Kaggle and place it in a local `data/` folder (not committed).
-3. Open the notebook in `python/` and run all cells.
-
-## Skills Demonstrated
-
-SQL (joins, CTEs, window functions, date functions) · funnel and cohort analysis · A/B test analysis · Python (pandas, scipy) · dashboarding in Looker Studio · written recommendations
+1. Open the [BigQuery sandbox](https://console.cloud.google.com/bigquery).
+2. Check each table’s Schema tab for column names.
+3. Run the queries in [`sql/question_bank.sql`](sql/question_bank.sql).
 
 ## Limitations
 
-- Public datasets are synthetic or anonymised and may not reflect a real company's behaviour
-- [Add the limits of your own analysis, such as assumptions you made]
+- The dataset is public and synthetic, so behaviour may not match a real business.
+- The funnel is session-level and does not enforce event order.
+- Buyers are defined from the orders table, excluding cancelled orders.
+- Some months may be incomplete, and small differences between segments should be treated as descriptive.
+- Retention values are cohort averages and are very low in this dataset.
 
-## About
+## Skills demonstrated
 
-K. Bhanushree · [LinkedIn](https://linkedin.com/in/[your-handle]) · [Portfolio](https://[your-notion-link]) · [email]
+SQL (CTEs, window functions, date functions, joins) · funnel and cohort analysis · charts in Google Sheets · written recommendations
