@@ -39,6 +39,7 @@ A SQL analysis of a public e-commerce dataset in Google BigQuery to find where s
 - [Funnel](images/funnel.png)
 - [Conversion by traffic source](images/conversion-by-source.png)
 - [Retention heatmap](images/retention-heatmap.png)
+- [Average retention by month](images/retention-line-chart.png)
 - [Repeat rate by source](images/repeat-rate-by-source.png)
 
 ## How to run
